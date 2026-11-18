@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="container">
+    <div class="topbar">
+        <h2>Welcome, {{ user }}</h2>
+        <a class="logout" href="{{ url_for('logout') }}">Logout</a>
+    </div>
+    <p class="sub">This is a protected dashboard. Only logged-in users can see it.</p>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+            <div class="alert {{ category }}">{{ message }}</div>
+        {% endfor %}
+    {% endwith %}
+
+    <h3>User Management</h3>
+
+    <form method="POST" action="{{ url_for('dashboard') }}">
+        <input type="text" name="name" placeholder="Enter Name" required>
+        <input type="email" name="email" placeholder="Enter Email" required>
+        <button type="submit">Add User</button>
+    </form>
+
+    <h3>All Users ({{ users|length }})</h3>
+
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+        </tr>
+        {% for u in users %}
+        <tr>
+            <td>{{ u.id }}</td>
+            <td>{{ u.name }}</td>
+            <td>{{ u.email }}</td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="3" class="empty">No users yet. Add one above.</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+</body>
+</html>
